@@ -1,8 +1,10 @@
-const http = require('http')
-const FeedMe = require('feedme')
-const axios = require('axios')
 const moment = require('moment')
 const schedule = require('node-schedule')
+const axios = require('axios')
+
+const Echojs = require('./rss/echojs')
+
+// TODO: 记录 RSS 上次数据，做去重处理
 
 moment.locale('zh-cn')
 
@@ -34,22 +36,14 @@ function sendDD (news) {
 }
 
 function getNews () {
-  http.get('http://www.echojs.com/rss', res => {
-    if (res.statusCode !== 200) {
-      console.error(new Error(`status code ${res.statusCode}`))
-      return
-    }
-    var parser = new FeedMe(true)
-    parser.on('end', () => {
-      const data = parser.done()
-      sendDD(data)
-    })
-    res.pipe(parser)
+  const echojs = new Echojs()
+  echojs.getRssJson().then(res => {
+    sendDD(res)
   })
 }
 
-const job = schedule.scheduleJob('* * 9 * * *', function () {
-  getNews()
-})
-
-console.log(job.nextInvocation())
+// 定时任务
+// schedule.scheduleJob('* * 9 * * *', function () {
+//   getNews()
+// })
+getNews()
