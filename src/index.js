@@ -9,7 +9,7 @@ const Echojs = require('./rss/echojs')
 moment.locale('zh-cn')
 
 // const webhook = 'https://oapi.dingtalk.com/robot/send?access_token=684025a2c2f80e9d7716baace939f91f1adfb444e967113501f66babfe153d02'
-const webhook = 'https://oapi.dingtalk.com/robot/send?access_token=8c61043eec6613f566ae31fc68471cc267bdffe822c23a584439d78ae3974663'
+const webhook = 'https://oapi.dingtalk.com/robot/send?access_token=7cbfc510719d62a9fe0d2fb96669e026b7568449c70c4a2d1335b024c850c2bd'
 
 function sendDD (news) {
   if (!news) {
@@ -27,12 +27,13 @@ function sendDD (news) {
       'text': `## 前端资讯(BETA) \n ##### ${moment().format('LL')} \n\n ${dingdingText}\n\n`
     },
     'at': {
-      'atMobiles': [
-        '1825718XXXX'
-      ],
+      'atMobiles': [],
       'isAtAll': false
     }
-  }).then(() => console.log('发送成功！'))
+  }).then(() => console.log('发送成功！')).catch(err => {
+    console.log(err)
+  })
+
 }
 
 function getNews () {

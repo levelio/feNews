@@ -15,7 +15,6 @@ class RSS {
     try {
       const filePath = path.join(cachePath, this.namespace)
       const cacheData = fs.readFileSync(filePath)
-      console.log(cacheData)
       return JSON.parse(cacheData)
     } catch (err) {
       console.log('读取cache失败')
@@ -41,14 +40,14 @@ class RSS {
     const cache = this._getCacheData()
     if (cache) {
       // diff cache
-      return this.diff(cache, data)
+      return data // this.diff(cache, data)
     } else {
       return data
     }
   }
 
   _saveCache (json) {
-    fs.writeFile(
+    fs.writeFileSync(
       path.join(cachePath, this.namespace),
       JSON.stringify(json),
       (err) => {
@@ -68,8 +67,8 @@ class RSS {
           parser.on('end', () => {
             const data = parser.done()
             const newData = this._getUpdateData(data)
-            resolve(newData)
             this._saveCache(data)
+            resolve(newData)
           })
           res.pipe(parser)
         })
